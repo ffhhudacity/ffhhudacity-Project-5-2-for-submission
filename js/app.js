@@ -11,7 +11,7 @@ var Venue = function(data, foursquareID) {
 	this.marker = {};
 	this.photoPrefix = 'https://irs0.4sqi.net/img/general/';
 	this.photoPlaceHolder = 'http://placehold.it/100x100';
-	this.photoSuffix;
+
 	this.basePhotoAlbumnURL = 'https://api.foursquare.com/v2/venues/';
 	this.photoAlbumnURL = this.getPhotoAlbumnURL(data, foursquareID);
 	this.formattedPhone = this.getFormattedPhone(data);
@@ -19,7 +19,7 @@ var Venue = function(data, foursquareID) {
 	this.rating = this.getRating(data);
 	this.featuredPhoto = this.getFeaturedPhoto(data);
 
-}
+};
 
 
 Venue.prototype = {
@@ -57,7 +57,7 @@ Venue.prototype = {
   			return this.photoPrefix + 'width50' + this.photoSuffix;
 		}
 	},
-}
+};
 
 function AppViewModel() {
 
@@ -99,7 +99,7 @@ function AppViewModel() {
     for (var i = 0; i < articles.length; i++) {
         var article = articles[i];
         $nytElem.append('<li class="article">' + '<a href="'+article.web_url+'">'+article.headline.main+'</a>' + '<p>' + article.snippet + '</p>' + '</li>');
-    };
+    }
 
 }).error(function(e) {
     $nytHeaderElem.text('New York Times Articles Could Not Be Loaded');
@@ -110,12 +110,12 @@ function AppViewModel() {
 		update: function(el, va, ab) {
 			ab().html && va()(ab().html);
 		}
-	}
+	};
 
 
-	self.updateVObservable = function() {
+	self.updatedObservable = function() {
 		self.displayVenuesList(!self.displayVenuesList());
-	}
+	};
 
 	self.computedNeighborhood = function() {
 
@@ -123,7 +123,7 @@ function AppViewModel() {
 			removeVenueMarkers();
 			self.topPicks([]);
 			getNeighborhood(self.neighborhood());
-			$nytHeaderElem.text('New York Times Articles About ' + (self.neighborhood()));
+			// $nytHeaderElem.text('New York Times Articles About ' + (self.neighborhood()));
 
 
 			var nytimesURL = 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=' + self.neighborhood() + '&sort=newest&api-key=a36d6720b0e6e27fde6b20dc77045c40:0:71510927';
@@ -134,7 +134,7 @@ function AppViewModel() {
     			for (var i = 0; i < articles.length; i++) {
         		var article = articles[i];
         		$nytElem.append('<li class="article">' + '<a href="'+article.web_url+'">'+article.headline.main+'</a>' + '<p>' + article.snippet + '</p>' + '</li>');
-   					};
+   				}
    		}).error(function(e) {
     $nytHeaderElem.text('New York Times Articles Could Not Be Loaded');
 });	
@@ -163,7 +163,7 @@ function AppViewModel() {
 		map.panTo(venuePosition);
 		selectedMarkerBounce(venue.marker);
 
-	}
+	};
 
 
 	function createNeighborhoodMarker(place) {
@@ -224,7 +224,7 @@ function AppViewModel() {
 		self.selectedMarker().setAnimation(null); 
 		});
 
-	};
+	}
 
 
  	function getFoursquareData() {
@@ -253,7 +253,7 @@ function AppViewModel() {
 
 
 				var tempBounds = data.response.suggestedBounds;
-				if (tempBounds != undefined) {
+				if (tempBounds !== undefined) {
 					bounds = new google.maps.LatLngBounds(
 						new google.maps.LatLng(tempBounds.sw.lat, tempBounds.sw.lng),
 						new google.maps.LatLng(tempBounds.ne.lat, tempBounds.ne.lng));
@@ -270,7 +270,7 @@ function AppViewModel() {
 		});
 	}
  
- 	 function setPhotoAlbumns (venueItem) {
+ 	function setPhotoAlbumns (venueItem) {
 
 		var baseImgURL = 'https://irs3.4sqi.net/img/general/'; // base url to retrieve venue photos
 
@@ -281,7 +281,7 @@ function AppViewModel() {
 
 				var imgItems = data.response.photos.items;
 
-
+				venueItem.photoAlbumn = [];
 				for (var i in imgItems) {
 					var venueImgURL = baseImgURL + 'width800' + imgItems[i].suffix;
 					var venueImgObj = {
@@ -325,7 +325,7 @@ function AppViewModel() {
 		google.maps.event.addListener(venueMarker, 'click', function() {
 	    	
 	    	// if this marker is clicked, scroll to this venue info in the venue listing window
-			document.getElementById(venue.id).scrollIntoView();
+			// document.getElementById(venue.id).scrollIntoView();
 			var clickEvent = jQuery.Event('click');
 			clickEvent.stopPropagation();
 			// trigger this venue's click event
@@ -351,7 +351,7 @@ function AppViewModel() {
 
 	function selectedMarkerBounce(venueMarker) {
 
-		if (venueMarker.getAnimation() == null) {
+		if (venueMarker.getAnimation() === null) {
 
 			self.selectedMarker(venueMarker);
 
@@ -447,7 +447,7 @@ function AppViewModel() {
 		
 		$('#map-canvas').height($(window).height());
 
-	};
+	}
 
 
 	window.addEventListener('resize', function(e) {
@@ -457,12 +457,26 @@ function AppViewModel() {
 		$('#map-canvas').height($(window).height());
 	});
 
+	window.addEventListener('load', function() {
+		var status = document.getElementById("status");
 
+		function updateOnlineStatus(event) {
+			var condition = navigator.online ? "online" : "offline";
+
+			status.className = condition;
+			status.innerHTML = condition.toUpperCase();
+
+			log.insertAdjacentHTML("beforeend", "Event: " + event.type + "; status: " + condition);
+		}
+		window.addEventListener('online', updateOnlineStatus);
+		window.addEventListener('offline', updateOnlineStatus);
+	});
+	
 	initializeMap();
 
 	initializeNeighborhood(defaultNeighborhood);
 
-};
+}
 
 $(function() {
 

@@ -1,3 +1,13 @@
+Improvements made for 3rd submission: Thanks for the reviewers' comments, I fixed the following:
+
+	1. Added the "info" option for filtering the searching function.
+	2. Fixed the bug so that the markers on the map are clickable.
+	3. Added back the list view of the places shown on the map.
+	4. Added the "offline" handling function.
+	5. Tested the code in JHint and fixed the errors.
+	6. All application components seem to be responsive. 
+
+
 Improvements made for 2nd submission:
 
 	1. fixed the index.html according to reviewer's comments, such as </div>, removing "type" attribute.
